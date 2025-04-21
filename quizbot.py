@@ -142,11 +142,14 @@ async def main():
 
     print("🔗 Бот запущен с использованием webhook...")
 
+    # Now just use run_webhook without asyncio.run
     await app.run_webhook(
         listen="0.0.0.0",
         port=PORT,
         url_path="webhook"
     )
 
+# If you're on a platform like Railway, you should just let the framework manage the event loop
 if __name__ == "__main__":
-    asyncio.run(main())
+    import asyncio
+    asyncio.get_event_loop().run_until_complete(main())

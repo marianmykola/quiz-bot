@@ -138,9 +138,10 @@ def main():
     print("🔗 Бот запущен с использованием webhook...")
 
     app.run_webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        webhook_url=f"{WEBHOOK_URL}/webhook"
-    )
+       listen="0.0.0.0",
+       port=int(os.getenv("PORT", 8080)),
+       webhook_path="/webhook",
+       webhook_url=os.getenv("WEBHOOK_URL") + "/webhook"
+)
 if __name__ == "__main__":
     main()

@@ -1,5 +1,6 @@
 import json
 import os
+import asyncio
 import random
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
@@ -124,24 +125,28 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_question(update, context)
 
 # Запуск бота
-def main():
-    TOKEN = os.getenv("BOT_TOKEN", "your-token-if-no-env")
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://quiz-bot-production.up.railway.app")
-    PORT = int(os.getenv("PORT", "8080"))  # ← добавили определение PORT
+async def main():
+    TOKEN = os.getenv("BOT_TOKEN")
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # example: https://your-app.up.railway.app
+    PORT = int(os.getenv("PORT", 8080))
 
     app = ApplicationBuilder().token(TOKEN).build()
 
+    # Register handlers here
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(restart, pattern="^restart$"))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
+    # Set webhook (important!)
+    await app.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
+
     print("🔗 Бот запущен с использованием webhook...")
 
-    app.run_webhook(
-       listen="0.0.0.0",
-       port=int(os.getenv("PORT", 8080)),
-       webhook_path="/webhook",
-       webhook_url=os.getenv("WEBHOOK_URL") + "/webhook"
-)
+    await app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path="webhook"
+    )
+
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

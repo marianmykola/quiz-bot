@@ -124,18 +124,22 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Запуск бота
 def main():
-    app = ApplicationBuilder().token("7515337251:AAHne9bUrUB6fFIOdz88zy5uCq72HLKoBCU").build()
+    TOKEN = os.getenv("BOT_TOKEN", "your-token-if-no-env")
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://your-app.up.railway.app")
+    PORT = int(os.getenv("PORT", "8000"))  # ← добавили определение PORT
+
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(restart, pattern="^restart$"))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
-    print("Бот запущен...")
+    print("🔗 Бот запущен с использованием webhook...")
+
     app.run_webhook(
         listen="0.0.0.0",
         port=PORT,
         webhook_url=f"{WEBHOOK_URL}/webhook"
     )
-
 if __name__ == "__main__":
     main()

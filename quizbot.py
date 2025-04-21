@@ -126,32 +126,27 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Запуск бота
 
-async def main():
+def main():
     TOKEN = os.getenv("BOT_TOKEN")
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # Example: https://your-app.up.railway.app
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # например, https://your-app.up.railway.app
     PORT = int(os.getenv("PORT", 8080))
 
     app = ApplicationBuilder().token(TOKEN).build()
 
-    # Register handlers here
+    # Регистрируем обработчики
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(restart, pattern="^restart$"))
     app.add_handler(CallbackQueryHandler(handle_answer))
 
-    # Set webhook (important!)
-    await app.bot.set_webhook(f"{WEBHOOK_URL}/webhook")
+    # Устанавливаем webhook
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path="webhook",
+        webhook_url=f"{WEBHOOK_URL}/webhook"
+    )
 
     print("🔗 Бот запущен с использованием webhook...")
 
-    # Run webhook without manually creating an event loop
-    await app.run_webhook(
-        listen="0.0.0.0",  # Listen on all IPs
-        port=PORT,
-        url_path="webhook"
-    )
-
-# Ensure the bot uses the existing event loop
 if __name__ == "__main__":
-    import asyncio
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())   # Let asyncio run the event loop directly
+    main() # Let asyncio run the event loop directly

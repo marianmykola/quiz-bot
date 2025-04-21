@@ -126,8 +126,8 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Запуск бота
 def main():
     TOKEN = os.getenv("BOT_TOKEN", "your-token-if-no-env")
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://your-app.up.railway.app")
-    PORT = int(os.getenv("PORT", "8000"))  # ← добавили определение PORT
+    WEBHOOK_URL = os.getenv("WEBHOOK_URL", "https://quiz-bot-production.up.railway.app")
+    PORT = int(os.getenv("PORT", "8080"))  # ← добавили определение PORT
 
     app = ApplicationBuilder().token(TOKEN).build()
 

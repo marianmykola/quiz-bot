@@ -125,6 +125,7 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_question(update, context)
 
 # Запуск бота
+
 async def main():
     TOKEN = os.getenv("BOT_TOKEN")
     WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # example: https://your-app.up.railway.app
@@ -142,14 +143,14 @@ async def main():
 
     print("🔗 Бот запущен с использованием webhook...")
 
-    # Now just use run_webhook without asyncio.run
+    # Now just use run_webhook, no need for asyncio.run
     await app.run_webhook(
         listen="0.0.0.0",
         port=PORT,
         url_path="webhook"
     )
 
-# If you're on a platform like Railway, you should just let the framework manage the event loop
+# Remove manual asyncio.run(main())
 if __name__ == "__main__":
     import asyncio
-    asyncio.get_event_loop().run_until_complete(main())
+    asyncio.run(main())  # Let asyncio run the event loop directly

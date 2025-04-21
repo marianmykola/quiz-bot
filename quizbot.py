@@ -131,7 +131,11 @@ def main():
     app.add_handler(CallbackQueryHandler(handle_answer))
 
     print("Бот запущен...")
-    app.run_polling()
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        webhook_url=f"{WEBHOOK_URL}/webhook"
+    )
 
 if __name__ == "__main__":
     main()
